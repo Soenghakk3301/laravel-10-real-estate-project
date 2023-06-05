@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
+use App\Models\User;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -30,7 +31,18 @@ class AuthenticatedSessionController extends Controller
         $request->session()->regenerate();
 
 
-        $url = '';
+        $id = Auth::user()->id;
+        $adminData = User::find($id);
+        $username = $adminData->name;
+
+
+        $notification = array(
+         'message' => 'User '.$username.' Login Successfully',
+         'alert-type' => 'info'
+        ); 
+
+
+         $url = '';
         if($request->user()->role === 'admin') 
          $url = 'admin/dashboard';
         elseif($request->user()->role === 'agent')
@@ -38,7 +50,7 @@ class AuthenticatedSessionController extends Controller
         elseif($request->user()->role === 'user') 
          $url = '/dashboard';
 
-        return redirect()->intended($url);
+        return redirect()->intended($url)->with($notification);
     }
 
     /**

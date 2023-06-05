@@ -24,9 +24,11 @@ Route::get('/dashboard', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::get('/user/profile', [UserController::class, 'userProfile'])->name('user.profile');
+    Route::post('/user/profile/store', [UserController::class, 'userProfileStore'])->name('user.profile.store');
+    Route::get('/user/logout', [UserController::class, 'userLogout'])->name('user.logout');
+    Route::get('/user/change/password', [UserController::class, 'userChangePassword'])->name('user.change.password');
+    Route::post('/user/password/update', [UserController::class, 'userPasswordUpdate'])->name('user.password.update');
 });
 
 
@@ -41,6 +43,10 @@ Route::middleware(['auth', 'role:admin'])->group(function() {
 });
 
 Route::get('/admin/login', [AdminController::class, 'adminLogin'])->name('admin.login');
+
+
+// User Areas
+
 
 
 // Agent Areas //
