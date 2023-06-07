@@ -36,6 +36,45 @@
            </ul>
          </div>
        </li>
+       
+       {{-- amenities --}}
+       <li class="nav-item">
+         <a class="nav-link" data-bs-toggle="collapse" href="#amenities" role="button" aria-expanded="false" aria-controls="emails">
+           <i class="link-icon" data-feather="mail"></i>
+           <span class="link-title">Amenities</span>
+           <i class="link-arrow" data-feather="chevron-down"></i>
+         </a>
+         <div class="collapse" id="amenities">
+           <ul class="nav sub-menu">
+             <li class="nav-item">
+               <a href="{{ route('all.amenities') }}" class="nav-link">All Amenities</a>
+             </li>
+             <li class="nav-item">
+               <a href="{{ route('add.amenities') }}" class="nav-link">Add Amenities</a>
+             </li>
+           </ul>
+         </div>
+       </li>
+
+
+       {{-- property --}}
+       <li class="nav-item">
+         <a class="nav-link" data-bs-toggle="collapse" href="#property" role="button" aria-expanded="false" aria-controls="emails">
+           <i class="link-icon" data-feather="mail"></i>
+           <span class="link-title">Property</span>
+           <i class="link-arrow" data-feather="chevron-down"></i>
+         </a>
+         <div class="collapse" id="property">
+           <ul class="nav sub-menu">
+             <li class="nav-item">
+               <a href="{{ route('all.property') }}" class="nav-link">All Property</a>
+             </li>
+             <li class="nav-item">
+               <a href="{{ route('add.property') }}" class="nav-link">Add Property</a>
+             </li>
+           </ul>
+         </div>
+       </li>
       
        <li class="nav-item">
          <a href="pages/apps/calendar.html" class="nav-link">
