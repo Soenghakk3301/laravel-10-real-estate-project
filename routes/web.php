@@ -102,4 +102,10 @@ Route::middleware(['auth', 'role:agent'])->group(function() {
 });
 
 
+Route::controller(AgentController::class)->group(function() {
+   Route::get('/agent/login', 'agentLogin')->middleware(RedirectIfAuthenticated::class)->name('agent.login');
+   Route::post('agent/register', 'agentRegister')->name('agent.register');
+});
+
+
 require __DIR__.'/auth.php';
