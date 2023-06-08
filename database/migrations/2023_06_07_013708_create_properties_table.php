@@ -35,12 +35,13 @@ return new class extends Migration
             $table->string('city')->nullable();
             $table->string('state')->nullable();
             $table->string('postal_code')->nullable();
-            $table->string('heighborhood')->nullable();
+            $table->string('neighborhood')->nullable();
             $table->string('latitude')->nullable();
-            $table->string('longitude')->nullable();
+            $table->string('longtitude')->nullable();
+            $table->string('featured')->nullable();
             $table->string('hot')->nullable();
             $table->integer('agent_id')->nullable();
-            $table->string('status')->default();
+            $table->string('status')->default(1);
             $table->timestamps();
         });
     }

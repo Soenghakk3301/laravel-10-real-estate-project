@@ -72,10 +72,23 @@ Route::middleware(['auth', 'role:admin'])->group(function() {
       Route::get('/edit/property/{id}', 'editProperty')->name('edit.property');
       Route::post('/update/property', 'updateProperty')->name('update.property');
       Route::get('/delete/property/{id}', 'deleteProperty')->name('delete.property');
+
+
+      Route::post('/update/property/thambnail', 'updatePropertyThambnail')->name('update.property.thambnail');
+      Route::post('/update/property/multiImage', 'updatePropertyMultiImage')->name('update.property.multiImage');
+
+      Route::get('/delete/property/multiImage/{id}', 'deletePropertyMultiImage')->name('delete.property.multiImage');
+      Route::post('/store/new/multiImage', 'storeNewMultiImage')->name('store.new.multiImage');
+      Route::post('/update/property/facilities', 'updatePropertyFacilities')->name('update.property.facilities');
+
+      Route::get('/details/property/{id}', 'detailsProperty')->name('details.property');
+
+      Route::post('/inactive/property', 'InactiveProperty')->name('inactive.property');
+      Route::post('/active/property', 'ActiveProperty')->name('active.property');
    });
 });
 
-Route::get('/admin/login', [AdminController::class, 'adminLogin'])->name('admin.login');
+Route::get('/admin/login', [AdminController::class, 'adminLogin'])->middleware(RedirectIfAuthenticated::class)->name('admin.login');
 
 
 // User Areas

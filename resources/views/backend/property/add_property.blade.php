@@ -18,7 +18,7 @@
         <h6 class="card-title">Add Property </h6>
             
 
-            <form method="post" action="" id="myForm" enctype="multipart/form-data">
+            <form method="post" action="{{ route('store.property') }}" id="myForm" enctype="multipart/form-data">
                 @csrf
 
 
@@ -60,7 +60,7 @@
          <div class="col-sm-6">
             <div class="form-group mb-3">
                 <label class="form-label">Main Thambnail </label>
-                <input type="file" name="property_thambnail " class="form-control" onChange="mainThamUrl(this)"  >
+                <input type="file" name="property_thambnail" class="form-control" onChange="mainThamUrl(this)"  >
 
                 <img src="" id="mainThmb">
 
@@ -207,10 +207,10 @@
         <div class="col-sm-4">
             <div class="mb-3">
                 <label class="form-label">Property Amenities </label>
-     <select name="amenities_id[]" class="js-example-basic-multiple form-select" multiple="multiple" data-width="100%">
+     <select name="amenities_id[]" class="js-example-basic-multiple form-select" multiple="multiple" data-width="100%" id="exampleFormControlTextarea1">
 
                  @foreach($amenities as $ameni)
-                <option value="{{ $ameni->id }}">{{ $ameni->amenitis_name }}</option>
+                <option value="{{ $ameni->id }}">{{ $ameni->amenities_name }}</option>
                @endforeach
                 
             </select>
@@ -235,7 +235,7 @@
       <div class="col-sm-12">
             <div class="mb-3">
                 <label class="form-label">Short Description</label>
-          <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+          <textarea name="short_descp" class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
                  
             </div>
         </div><!-- Col -->
@@ -246,7 +246,7 @@
             <div class="mb-3">
                 <label class="form-label">Long Description</label>
 
-                <textarea class="form-control" name="tinymce" id="tinymceExample" rows="10"></textarea>
+                <textarea name="long_descp" class="form-control" name="tinymce" id="tinymceExample" rows="10"></textarea>
                  
             </div>
         </div><!-- Col -->
@@ -390,10 +390,6 @@
    });
 </script>
 <!--========== End of add multiple class with ajax ==============-->
-
-
-
-
 
 <script type="text/javascript">
     $(document).ready(function (){

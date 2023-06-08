@@ -139,7 +139,5 @@ class PropertyTypeController extends Controller
 
    }// End Method 
 
-
-
    //////// Property Controller ////////
 }
