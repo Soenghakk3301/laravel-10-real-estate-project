@@ -12,9 +12,15 @@ use Illuminate\Support\Facades\Hash;
 class AgentController extends Controller
 {
     public function AgentDashboard() {
-      return view('agent.agent_dashboard');
+      return view('agent.index');
     }
 
+
+    public function agentLogin(){
+
+      return view('agent.agent_login');
+
+   }
 
     public function agentRegister(Request $request){
 
@@ -35,4 +41,104 @@ class AgentController extends Controller
       return redirect(RouteServiceProvider::AGENT);
 
   }
+
+  public function agentLogout(Request $request) {
+      Auth::guard('web')->logout();
+
+      $request->session()->invalidate();
+
+      $request->session()->regenerateToken();
+
+
+      $notification = array(
+         'message' => 'User Logout Successfully.',
+         'alert-type' => 'success',
+      );
+
+      return redirect('/login')->with($notification);
+  }
+
+
+  public function agentProfile(){
+
+   $id = Auth::user()->id;
+   $profileData = User::find($id);
+   return view('agent.agent_profile_view',compact('profileData'));
+
+   }
+
+  public function agentProfileStore(Request $request){
+
+   $id = Auth::user()->id;
+   $data = User::find($id);
+   $data->username = $request->username;
+   $data->name = $request->name;
+   $data->email = $request->email;
+   $data->phone = $request->phone;
+   $data->address = $request->address; 
+
+   if ($request->file('photo')) {
+       $file = $request->file('photo');
+       @unlink(public_path('upload/agent_images/'.$data->photo));
+       $filename = date('YmdHi').$file->getClientOriginalName(); 
+       $file->move(public_path('upload/agent_images'),$filename);
+       $data['photo'] = $filename;  
+   }
+
+   $data->save();
+
+   $notification = array(
+       'message' => 'Agent Profile Updated Successfully',
+       'alert-type' => 'success'
+   );
+
+   return redirect()->back()->with($notification);
+
+   }
+
+   
+   public function AgentChangePassword(){
+
+      $id = Auth::user()->id;
+      $profileData = User::find($id);
+      return view('agent.agent_change_password',compact('profileData'));
+
+   }// End Method 
+
+
+  public function AgentUpdatePassword(Request $request){
+
+      // Validation 
+      $request->validate([
+         'old_password' => 'required',
+         'new_password' => 'required|confirmed'
+
+      ]);
+
+      /// Match The Old Password
+
+      if (!Hash::check($request->old_password, auth::user()->password)) {
+
+         $notification = array(
+         'message' => 'Old Password Does not Match!',
+         'alert-type' => 'error'
+         );
+
+         return back()->with($notification);
+      }
+
+      /// Update The New Password 
+
+      User::whereId(auth()->user()->id)->update([
+         'password' => Hash::make($request->new_password)
+
+      ]);
+
+      $notification = array(
+         'message' => 'Password Change Successfully',
+         'alert-type' => 'success'
+      );
+
+      return back()->with($notification); 
+   }
 }

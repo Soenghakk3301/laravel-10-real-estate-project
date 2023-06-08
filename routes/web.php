@@ -4,8 +4,8 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AgentController;
 use App\Http\Controllers\Backend\PropertyController;
 use App\Http\Controllers\Backend\PropertyTypeController;
-use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
+use App\Http\Middleware\RedirectIfAuthenticated;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -99,12 +99,15 @@ Route::get('/admin/login', [AdminController::class, 'adminLogin'])->middleware(R
 
 Route::middleware(['auth', 'role:agent'])->group(function() {
    Route::get('/agent/dashboard', [AgentController::class, 'AgentDashboard'])->name('agent.dashboard');
+   Route::post('/agent/logout', [AgentController::class, 'agent']);
 });
 
 
 Route::controller(AgentController::class)->group(function() {
    Route::get('/agent/login', 'agentLogin')->middleware(RedirectIfAuthenticated::class)->name('agent.login');
    Route::post('agent/register', 'agentRegister')->name('agent.register');
+   Route::get('/agent/profile', [AgentController::class, 'agentProfile'])->name('agent.profile');
+   Route::post('/agent/profile/store', [AgentController::class, 'agentProfileStore'])->name('agent.profile.store');
 });
 
 
