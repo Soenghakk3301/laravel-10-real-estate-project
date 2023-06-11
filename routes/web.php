@@ -86,6 +86,15 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
         Route::post('/inactive/property', 'InactiveProperty')->name('inactive.property');
         Route::post('/active/property', 'ActiveProperty')->name('active.property');
     });
+
+    Route::controller(AdminController::class)->group(function () {
+        Route::get('/all/agent/', 'allAgent')->name('all.agent');
+        Route::get('/add/agent/', 'addAgent')->name('add.agent');
+        Route::post('/store/agent/', 'storeAgent')->name('store.agent');
+        Route::get('/edit/agent/{id}', 'editAgent')->name('edit.agent');
+        Route::post('/update/agent', 'updateAgent')->name('update.agent');
+        Route::get('/delete/agent/{id}', 'deleteAgent')->name('delete.agent');
+    });
 });
 
 Route::get('/admin/login', [AdminController::class, 'adminLogin'])->middleware(RedirectIfAuthenticated::class)->name('admin.login');

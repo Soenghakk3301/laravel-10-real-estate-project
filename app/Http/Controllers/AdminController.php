@@ -112,4 +112,79 @@ class AdminController extends Controller
 
         return back()->with($notification);
     }
+
+
+
+    //////// Agent User All Method //////////
+
+    public function allAgent()
+    {
+        $allagent = User::where('role', 'agent')
+                        ->get();
+        return view('backend.agentuser.all_agent', compact('allagent'));
+    }
+
+    public function addAgent()
+    {
+        return view('backend.agentuser.add_agent');
+    }
+
+    public function storeAgent(Request $request)
+    {
+        User::insert([
+           'name' => $request->name,
+           'email' => $request->email,
+           'phone' => $request->phone,
+           'address' => $request->address,
+           'password' => Hash::make($request->password),
+           'role' => 'agent',
+           'status' => 'success',
+        ]);
+
+        $notification = array(
+         'message' => 'Agent Created Successfully.',
+         'alert-type' => 'success',
+        );
+
+        return redirect()->route('all.agent')->with($notification);
+    }
+
+    public function editAgent($id)
+    {
+        $agent = User::findOrFail($id);
+        return view('backend.agentuser.edit_agent', compact('agent'));
+    }
+
+    public function updateAgent(Request $request)
+    {
+        $user_id = $request->id;
+
+        User::findOrFail($user_id)->update([
+           'name' => $request->name,
+           'email' => $request->email,
+           'phone' => $request->phone,
+           'address' => $request->address,
+        ]);
+
+        $notification = array(
+           'message' => 'Agent Updated Successfully',
+           'alert-type' => 'success'
+        );
+
+        return redirect()->route('all.agent')->with($notification);
+    }
+
+    public function deleteAgent($id)
+    {
+
+        User::findOrFail($id)->delete();
+
+        $notification = array(
+               'message' => 'Agent Deleted Successfully',
+               'alert-type' => 'success'
+           );
+
+        return redirect()->back()->with($notification);
+
+    }
 }
