@@ -32,23 +32,29 @@ class AuthenticatedSessionController extends Controller
 
 
         $id = Auth::user()->id;
+
+        //   dd($id);
+
         $adminData = User::find($id);
         $username = $adminData->name;
 
 
         $notification = array(
-         'message' => 'User '.$username.' Login Successfully',
-         'alert-type' => 'info'
-        ); 
+           'message' => 'User '.$username.' Login Successfully',
+           'alert-type' => 'info'
+        );
 
+        $url = '';
+        if($request->user()->role === 'user') {
+            $url = '/dashboard';
+        }
+        if($request->user()->role === 'agent') {
+            $url = '/agent/dashboard';
+        }
+        if($request->user()->role === 'admin') {
+            $usl = '/admin/dashboard';
+        }
 
-         $url = '';
-        if($request->user()->role === 'admin') 
-         $url = 'admin/dashboard';
-        elseif($request->user()->role === 'agent')
-         $url = 'agent/dashboard';
-        elseif($request->user()->role === 'user') 
-         $url = '/dashboard';
 
         return redirect()->intended($url)->with($notification);
     }
@@ -56,14 +62,14 @@ class AuthenticatedSessionController extends Controller
     /**
      * Destroy an authenticated session.
      */
-    public function destroy(Request $request): RedirectResponse
-    {
-        Auth::guard('web')->logout();
+      public function destroy(Request $request): RedirectResponse
+      {
+          Auth::guard('web')->logout();
 
-        $request->session()->invalidate();
+          $request->session()->invalidate();
 
-        $request->session()->regenerateToken();
+          $request->session()->regenerateToken();
 
-        return redirect('/');
-    }
+          return redirect('/');
+      }
 }
