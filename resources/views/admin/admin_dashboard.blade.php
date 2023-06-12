@@ -1,13 +1,5 @@
 <!DOCTYPE html>
-<!--
-Template Name: NobleUI - HTML Bootstrap 5 Admin Dashboard Template
-Author: NobleUI
-Website: https://www.nobleui.com
-Portfolio: https://themeforest.net/user/nobleui/portfolio
-Contact: nobleui123@gmail.com
-Purchase: https://1.envato.market/nobleui_admin
-License: For each use you must have a valid license purchased only from above link in order to legally use the theme for your project.
--->
+
 <html lang="en">
 
 <head>
@@ -19,13 +11,20 @@ License: For each use you must have a valid license purchased only from above li
     <meta name="keywords"
         content="nobleui, bootstrap, bootstrap 5, bootstrap5, admin, dashboard, template, responsive, css, sass, html, theme, front-end, ui kit, web">
 
-    <title>Admin Panel - Real Estate</title>
+    <title>Admin Panel - Real Estate </title>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
     <!-- End fonts -->
+
+    <link rel="stylesheet" href="{{ asset('backend/assets/vendors/select2/select2.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('backend/assets/vendors/jquery-tags-input/jquery.tagsinput.min.css') }}">
+
+    <!-- Plugin css for this page -->
+    <link rel="stylesheet" href="{{ asset('backend/assets/vendors/datatables.net-bs5/dataTables.bootstrap5.css') }}">
+    <!-- End plugin css for this page -->
 
     <!-- core:css -->
     <link rel="stylesheet" href="{{ asset('backend/assets/vendors/core/core.css') }}">
@@ -48,32 +47,26 @@ License: For each use you must have a valid license purchased only from above li
 
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css">
 
-    <!-- Plugin css for this page -->
-    <link rel="stylesheet" href="{{ asset('backend/assets/vendors/datatables.net-bs5/dataTables.bootstrap5.css') }}">
-    <!-- End plugin css for this page -->
-
-    <link rel="stylesheet" href="{{ asset('backend/assets/vendors/select2/select2.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('backend/assets/vendors/jquery-tags-input/jquery.tagsinput.min.css') }}">
-
 </head>
 
 <body>
     <div class="main-wrapper">
 
         <!-- partial:partials/_sidebar.html -->
-        @include('admin.body.sidebar');
+        @include('admin.body.sidebar')
+
         <!-- partial -->
 
         <div class="page-wrapper">
 
             <!-- partial:partials/_navbar.html -->
-            @include('admin.body.header');
+            @include('admin.body.header')
             <!-- partial -->
 
-            @yield('admin');
+            @yield('admin')
 
             <!-- partial:partials/_footer.html -->
-            @include('admin.body.footer');
+            @include('admin.body.footer')
             <!-- partial -->
 
         </div>
@@ -99,7 +92,31 @@ License: For each use you must have a valid license purchased only from above li
 
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 
-    {{-- javascript validation --}}
+    <script>
+        @if (Session::has('message'))
+            var type = "{{ Session::get('alert-type', 'info') }}"
+            switch (type) {
+                case 'info':
+                    toastr.info(" {{ Session::get('message') }} ");
+                    break;
+
+                case 'success':
+                    toastr.success(" {{ Session::get('message') }} ");
+                    break;
+
+                case 'warning':
+                    toastr.warning(" {{ Session::get('message') }} ");
+                    break;
+
+                case 'error':
+                    toastr.error(" {{ Session::get('message') }} ");
+                    break;
+            }
+        @endif
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <script src="{{ asset('backend/assets/js/code/code.js') }}"></script>
     <script src="{{ asset('backend/assets/js/code/validate.min.js') }}"></script>
 
     <!-- Start datatables -->
@@ -127,28 +144,8 @@ License: For each use you must have a valid license purchased only from above li
     <script src="{{ asset('backend/assets/js/tinymce.js') }}"></script>
     <!-- tinymce -->
 
-    <script>
-        @if (Session::has('message'))
-            var type = "{{ Session::get('alert-type', 'info') }}"
-            switch (type) {
-                case 'info':
-                    toastr.info(" {{ Session::get('message') }} ");
-                    break;
+    <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
 
-                case 'success':
-                    toastr.success(" {{ Session::get('message') }} ");
-                    break;
-
-                case 'warning':
-                    toastr.warning(" {{ Session::get('message') }} ");
-                    break;
-
-                case 'error':
-                    toastr.error(" {{ Session::get('message') }} ");
-                    break;
-            }
-        @endif
-    </script>
 </body>
 
 </html>

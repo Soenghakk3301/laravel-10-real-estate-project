@@ -1,10 +1,14 @@
 @extends('admin.admin_dashboard')
 @section('admin')
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+
+    <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+
     <div class="page-content">
 
         <nav class="page-breadcrumb">
             <ol class="breadcrumb">
-                <a href="{{ route('add.property') }}" class="btn btn-inverse-info"> Add Agent </a>
+                <a href="{{ route('add.agent') }}" class="btn btn-inverse-info"> Add Agent </a>
             </ol>
         </nav>
 
@@ -12,7 +16,7 @@
             <div class="col-md-12 grid-margin stretch-card">
                 <div class="card">
                     <div class="card-body">
-                        <h6 class="card-title">All Agent </h6>
+                        <h6 class="card-title">Agent All </h6>
 
                         <div class="table-responsive">
                             <table id="dataTableExample" class="table">
@@ -31,22 +35,27 @@
                                     @foreach ($allagent as $key => $item)
                                         <tr>
                                             <td>{{ $key + 1 }}</td>
-                                            <td><img src="{{ asset($item->property_thambnail) }}"
+                                            <td><img src="{{ !empty($item->photo) ? url('upload/agent_images/' . $item->photo) : url('upload/no_image.jpg') }}"
                                                     style="width:70px; height:40px;"> </td>
                                             <td>{{ $item->name }}</td>
                                             <td>{{ $item->role }}</td>
                                             <td>
-                                                @if ($item->status === 'active')
+                                                @if ($item->status == 'active')
                                                     <span class="badge rounded-pill bg-success">Active</span>
                                                 @else
                                                     <span class="badge rounded-pill bg-danger">InActive</span>
                                                 @endif
                                             </td>
-                                            <td>Change</td>
+
                                             <td>
-                                                <a href="{{ route('details.property', $item->id) }}"
-                                                    class="btn btn-inverse-info" title="Details"> <i data-feather="eye"></i>
-                                                </a>
+                                                <input data-id="{{ $item->id }}" class="toggle-class" type="checkbox"
+                                                    data-onstyle="success" data-offstyle="danger" data-toggle="toggle"
+                                                    data-on="Active" data-off="Inactive"
+                                                    {{ $item->status ? 'checked' : '' }}>
+
+                                            </td>
+
+                                            <td>
 
                                                 <a href="{{ route('edit.agent', $item->id) }}"
                                                     class="btn btn-inverse-warning" title="Edit"> <i
@@ -67,4 +76,54 @@
         </div>
 
     </div>
+
+    <script type="text/javascript">
+        $(function() {
+            $('.toggle-class').change(function() {
+                var status = $(this).prop('checked') == true ? 1 : 0;
+                var user_id = $(this).data('id');
+
+                $.ajax({
+                    type: "GET",
+                    dataType: "json",
+                    url: '/changeStatus',
+                    data: {
+                        'status': status,
+                        'user_id': user_id
+                    },
+                    success: function(data) {
+                        // console.log(data.success)
+
+                        // Start Message 
+
+                        const Toast = Swal.mixin({
+                            toast: true,
+                            position: 'top-end',
+                            icon: 'success',
+                            showConfirmButton: false,
+                            timer: 3000
+                        })
+                        if ($.isEmptyObject(data.error)) {
+
+                            Toast.fire({
+                                type: 'success',
+                                title: data.success,
+                            })
+
+                        } else {
+
+                            Toast.fire({
+                                type: 'error',
+                                title: data.error,
+                            })
+                        }
+
+                        // End Message   
+
+
+                    }
+                });
+            })
+        })
+    </script>
 @endsection
