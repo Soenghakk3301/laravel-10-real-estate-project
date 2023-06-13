@@ -195,7 +195,7 @@ class AdminController extends Controller
         $user->status = $request->status;
         $user->save();
 
-        return response()->json(['success'=>'Status Change Successfully']);
+        return response()->json(['success' => 'Status Change Successfully']);
 
     }
 }

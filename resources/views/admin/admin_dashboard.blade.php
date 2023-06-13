@@ -11,7 +11,7 @@
     <meta name="keywords"
         content="nobleui, bootstrap, bootstrap 5, bootstrap5, admin, dashboard, template, responsive, css, sass, html, theme, front-end, ui kit, web">
 
-    <title>Admin Panel - Real Estate </title>
+    <title>Agent Panel - Real Estate </title>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -53,7 +53,7 @@
     <div class="main-wrapper">
 
         <!-- partial:partials/_sidebar.html -->
-        @include('admin.body.sidebar')
+        @include('agent.body.sidebar')
 
         <!-- partial -->
 
@@ -116,7 +116,7 @@
     </script>
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
-    <script src="{{ asset('backend/assets/js/code/code.js') }}"></script>
+    {{-- <script src="{{ asset('backend/assets/js/code/code.js') }}"></script> --}}
     <script src="{{ asset('backend/assets/js/code/validate.min.js') }}"></script>
 
     <!-- Start datatables -->
@@ -143,8 +143,6 @@
     <script src="{{ asset('backend/assets/vendors/tinymce/tinymce.min.js') }}"></script>
     <script src="{{ asset('backend/assets/js/tinymce.js') }}"></script>
     <!-- tinymce -->
-
-    <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
 
 </body>
 

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\Agent\AgentPropertyController;
 use App\Http\Controllers\AgentController;
 use App\Http\Controllers\Backend\PropertyController;
 use App\Http\Controllers\Backend\PropertyTypeController;
@@ -87,6 +88,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
         Route::post('/active/property', 'ActiveProperty')->name('active.property');
     });
 
+    // For Admin of Agent
     Route::controller(AdminController::class)->group(function () {
         Route::get('/all/agent/', 'allAgent')->name('all.agent');
         Route::get('/add/agent/', 'addAgent')->name('add.agent');
@@ -110,6 +112,35 @@ Route::get('/admin/login', [AdminController::class, 'adminLogin'])->middleware(R
 Route::middleware(['auth', 'role:agent'])->group(function () {
     Route::get('/agent/dashboard', [AgentController::class, 'agentDashboard'])->name('agent.dashboard');
     Route::post('/agent/logout', [AgentController::class, 'agent']);
+
+    Route::controller(AgentPropertyController::class)->group(function () {
+        Route::get('/agent/all/property', 'agentAllProperty')->name('agent.all.property');
+        Route::get('/agent/add/property', 'agentAddProperty')->name('agent.add.property');
+        Route::post('/agent/store/property', 'agentStoreProperty')->name('agent.store.property');
+        Route::get('/agent/edit/property/{id}', 'agentEditProperty')->name('agent.edit.property');
+        Route::post('/agent/update/property', 'agentUpdateProperty')->name('agent.update.property');
+
+        // other
+        Route::post('/agent/update/property/thambnail', 'agentUpdatePropertyThambnail')->name('agent.update.property.thambnail');
+        Route::post('/agent/update/property/multiImage', 'agentUpdatePropertyMultiImage')->name('agent.update.property.multiimage');
+        Route::get('/agent/property/multiimg/delete/{id}', 'AgentPropertyMultiimgDelete')->name('agent.property.multiimg.delete');
+
+        //
+        Route::post('/agent/store/new/multiImage', 'agentStoreNewMultiImage')->name('agent.store.new.multiimage');
+        Route::post('/agent/update/property/facilities', 'agentUpdatePropertyFacilities')->name('agent.update.property.facilities');
+        Route::get('/agent/delete/property/{id}', 'agentDeleteProperty')->name('agent.delete.property');
+
+        Route::get('/agent/details/property/{id}', 'agentDetailsProperty')->name('agent.delete.property');
+
+
+        // Route for the Buy Package
+        Route::get('/buy/package', 'buyPackage')->name('buy.package');
+        Route::get('/buy/business/plan', 'buyBusinessPlan')->name('buy.business.plan');
+        Route::post('/store/business/plan', 'storeBusinessPlan')->name('store.business.plan');
+
+        Route::get('/buy/professional/plan', 'buyProfessionalPlan')->name('buy.profesional.plan');
+        Route::post('/store/professional/plan', 'storeProfessionalPlan')->name('store.professional.plan');
+    });
 });
 
 
