@@ -16,6 +16,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Intervention\Image\Facades\Image;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class AgentPropertyController extends Controller
 {
@@ -429,5 +430,46 @@ class AgentPropertyController extends Controller
         );
 
        return redirect()->route('agent.all.property')->with($notification);
+   }
+
+   public function PackageHistory()
+   {
+
+       $id = Auth::user()->id;
+       $packagehistory = PackagePlan::where('user_id', $id)->get();
+       return view('agent.package.package_history', compact('packagehistory'));
+
+   }
+
+
+   public function agentPackageInvoice($id)
+   {
+
+       $packagehistory = PackagePlan::where('id', $id)->first();
+
+       $pdf = Pdf::loadView('agent.package.package_history_invoice', compact('packagehistory'))->setPaper('a4')->setOption([
+           'tempDir' => public_path(),
+           'chroot' => public_path(),
+       ]);
+       return $pdf->download('invoice.pdf');
+
+   }
+
+   public function adminPackageHistory()
+   {
+       $packagehistory = PackagePlan::get();
+       return view('backend.package.package_history', compact('packagehistory'));
+   }
+
+   public function packageInvoice($id)
+   {
+       $packagehistory = PackagePlan::where('id', $id)->first();
+
+       $pdf = Pdf::loadView('backend.package.package_history_invoice', compact('packagehistory'))->setPaper('a4')->setOption([
+          'tempDir' => public_path(),
+          'chroot' => public_path(),
+       ]);
+
+       return $pdf->download('invoice.pdf');
    }
 }

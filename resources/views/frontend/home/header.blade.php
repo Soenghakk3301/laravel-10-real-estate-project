@@ -19,14 +19,16 @@
                 </ul>
 
                 @auth
+
                     <div class="sign-box">
-                        <a class="mr-2" href="{{ route('dashboard') }}"><i class="fas fa-user"></i>Dashboard</a>
+                        <a href="{{ route('dashboard') }}"><i class="fas fa-user"></i>Dashboard</a>
                         <a href="{{ route('user.logout') }}"><i class="fas fa-user"></i>Logout</a>
                     </div>
                 @else
                     <div class="sign-box">
                         <a href="{{ route('login') }}"><i class="fas fa-user"></i>Sign In</a>
                     </div>
+
                 @endauth
 
             </div>
@@ -37,7 +39,7 @@
         <div class="outer-box">
             <div class="main-box">
                 <div class="logo-box">
-                    <figure class="logo"><a href="index.html"><img
+                    <figure class="logo"><a href="{{ url('/') }}"><img
                                 src="{{ asset('frontend/assets/images/logo.png') }}" alt=""></a></figure>
                 </div>
                 <div class="menu-area clearfix">

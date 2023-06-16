@@ -7,6 +7,7 @@ use App\Models\Amentities;
 use App\Models\Facility;
 use App\Models\MultiImage;
 use App\Models\Property;
+use App\Models\PropertyMessage;
 use App\Models\PropertyType;
 use App\Models\User;
 use Carbon\Carbon;
@@ -397,5 +398,11 @@ class PropertyController extends Controller
           );
 
        return redirect()->route('all.property')->with($notification);
+   }
+
+   public function adminPropertyMessage()
+   {
+       $usermsg = PropertyMessage::get();
+       return view('backend.message.all_message', compact('usermsg'));
    }
 }

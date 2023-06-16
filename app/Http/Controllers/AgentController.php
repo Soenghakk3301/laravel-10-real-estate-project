@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\PropertyMessage;
 use App\Models\User;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Auth\Events\Registered;
@@ -148,5 +149,24 @@ class AgentController extends Controller
       );
 
       return back()->with($notification);
+  }
+
+
+  public function agentPropertyMessage($id)
+  {
+      $id = Auth::user()->id;
+      $usermsg = PropertyMessage::where('agent_id', $id)->get();
+
+      return view('agent.message.all_message', compact('usermsg'));
+  }
+
+  public function agentMessageDetails($id)
+  {
+      $uid = Auth::user()->id;
+      $usermsg = PropertyMessage::where('agent_id', $uid)->get();
+
+      $msgdetails = PropertyMessage::findOrFind($id);
+
+      return view('agent.message.message_details', compact('usermsg', 'msgdetails'));
   }
 }
