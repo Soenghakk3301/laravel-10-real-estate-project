@@ -1,4 +1,4 @@
-{{-- @php
+@php
     $skip_state_0 = App\Models\State::skip(0)->first();
     $property_0 = App\Models\Property::where('state', $skip_state_0->id)->get();
     
@@ -10,6 +10,7 @@
     
     $skip_state_3 = App\Models\State::skip(3)->first();
     $property_3 = App\Models\Property::where('state', $skip_state_3->id)->get();
+    
 @endphp
 
 <section class="place-section sec-pad">
@@ -88,4 +89,4 @@
             </div>
         </div>
     </div>
-</section> --}}
+</section>

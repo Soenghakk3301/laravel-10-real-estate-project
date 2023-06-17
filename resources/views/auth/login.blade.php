@@ -38,7 +38,7 @@
                         <div class="tabs-content">
                             <div class="tab active-tab" id="tab-1">
                                 <div class="inner-box">
-                                    <h4>Sign in</h4>
+                                    <h4>Login</h4>
                                     <form action="{{ route('login') }}" method="post" class="default-form">
                                         @csrf
 

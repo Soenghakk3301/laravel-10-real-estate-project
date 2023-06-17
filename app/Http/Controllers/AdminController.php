@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Hash;
 
 class AdminController extends Controller
 {
-    public function AdminDashboard()
+    public function adminDashboard()
     {
         return view('admin.index');
     }

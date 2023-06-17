@@ -53,7 +53,7 @@
     <div class="main-wrapper">
 
         <!-- partial:partials/_sidebar.html -->
-        @include('agent.body.sidebar')
+        @include('admin.body.sidebar')
 
         <!-- partial -->
 

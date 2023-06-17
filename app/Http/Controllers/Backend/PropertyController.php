@@ -9,6 +9,7 @@ use App\Models\MultiImage;
 use App\Models\Property;
 use App\Models\PropertyMessage;
 use App\Models\PropertyType;
+use App\Models\State;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -31,10 +32,11 @@ class PropertyController extends Controller
 
     public function addProperty()
     {
-        $propertyType = PropertyType::get();
+        $propertytype = PropertyType::get();
         $amenities = Amentities::get();
         $activeAgent = User::where('status', 'active')->where('role', 'agent')->get();
-        return view('backend.property.add_property', compact('propertyType', 'amenities', 'activeAgent'));
+        $pstate = State::get();
+        return view('backend.property.add_property', compact('propertytype', 'amenities', 'activeAgent', 'pstate'));
     }
 
     public function storeProperty(Request $request)
@@ -140,7 +142,9 @@ class PropertyController extends Controller
         $amenities = Amentities::get();
         $activeAgent = User::where('status', 'active')->where('role', 'agent')->latest()->get();
 
-        return view('backend.property.edit_property', compact('property', 'propertytype', 'amenities', 'activeAgent', 'property_ami', 'multiImage', 'facilities'));
+        $pstate = State::latest()->get();
+
+        return view('backend.property.edit_property', compact('property', 'propertytype', 'amenities', 'activeAgent', 'property_ami', 'multiImage', 'facilities', 'pstate'));
 
     }
 

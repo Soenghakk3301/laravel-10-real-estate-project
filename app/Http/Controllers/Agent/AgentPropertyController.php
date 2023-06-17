@@ -9,6 +9,7 @@ use App\Models\MultiImage;
 use App\Models\PackagePlan;
 use App\Models\Property;
 use App\Models\PropertyType;
+use App\Models\State;
 use App\Models\User;
 use Carbon\Carbon;
 use Haruncpi\LaravelIdGenerator\IdGenerator;
@@ -29,21 +30,23 @@ class AgentPropertyController extends Controller
 
     public function agentAddProperty()
     {
-        $amen = PropertyType::get();
+        $propertytype = PropertyType::get();
         $amenities = Amentities::get();
 
         $id = Auth::user()->id;
         $property = User::where('role', 'agent')->where('id', $id)->first();
         $pcount = $property->credit;
 
+        $pstate = State::latest()->get();
+
         if($pcount == 1) {
             return redirect()->route('buy.package');
         } else {
-            return  view('agent.property.add_property', compact('propertytype', 'amenities'));
+            return  view('agent.property.add_property', compact('propertytype', 'amenities', 'pstate'));
         }
 
 
-        return view('agent.property.add_property', compact('amen', 'amenities'));
+        return view('agent.property.add_property', compact('propertytype', 'amenities', 'pstate'));
     }
 
     public function agentStoreProperty(Request $request)
@@ -163,8 +166,9 @@ class AgentPropertyController extends Controller
 
         $propertytype = PropertyType::get();
         $amenities = Amentities::get();
+        $pstate = State::latest()->get();
 
-        return view('agent.property.edit_property', compact('property', 'propertytype', 'property_ami', 'multiImage', 'facilities'));
+        return view('agent.property.edit_property', compact('property', 'propertytype', 'property_ami', 'multiImage', 'facilities', 'pstate'));
     }
 
     public function agentUpdateProperty(Request $request)
@@ -358,7 +362,7 @@ class AgentPropertyController extends Controller
     {
         $id = Auth::user()->id;
         $data = User::find($id);
-        return view('agent.package.business_plan', compact('user'));
+        return view('agent.package.business_plan', compact('data'));
     }
 
 

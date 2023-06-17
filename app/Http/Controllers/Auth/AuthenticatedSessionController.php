@@ -52,7 +52,7 @@ class AuthenticatedSessionController extends Controller
             $url = '/agent/dashboard';
         }
         if($request->user()->role === 'admin') {
-            $usl = '/admin/dashboard';
+            $url = '/admin/dashboard';
         }
 
 

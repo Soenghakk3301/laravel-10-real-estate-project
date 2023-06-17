@@ -5,12 +5,14 @@ use App\Http\Controllers\Agent\AgentPropertyController;
 use App\Http\Controllers\AgentController;
 use App\Http\Controllers\Backend\PropertyController;
 use App\Http\Controllers\Backend\PropertyTypeController;
+use App\Http\Controllers\Backend\StateController;
 use App\Http\Controllers\Frontend\CompareController;
 use App\Http\Controllers\Frontend\IndexController;
 use App\Http\Controllers\Frontend\WishlistController;
 use App\Http\Controllers\UserController;
 use App\Http\Middleware\RedirectIfAuthenticated;
 use Illuminate\Support\Facades\Route;
+use PHPUnit\TextUI\Configuration\IncludePathNotConfiguredException;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,6 +24,15 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+
+//
+Route::middleware('auth')->group(function () {
+    Route::get('/user/profile', [UserController::class, 'userProfile'])->name('user.profile');
+    Route::post('/user/profile/store', [UserController::class, 'userProfileStore'])->name('user.profile.store');
+    Route::get('/user/logout', [UserController::class, 'userLogout'])->name('user.logout');
+    Route::get('/user/change/password', [UserController::class, 'userChangePassword'])->name('user.change.password');
+    Route::post('/user/password/update', [UserController::class, 'userPasswordUpdate'])->name('user.password.update');
+});
 
 // Frontend Areas
 Route::get('/', [UserController::class, 'index']);
@@ -52,19 +63,10 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-//
-Route::middleware('auth')->group(function () {
-    Route::get('/user/profile', [UserController::class, 'userProfile'])->name('user.profile');
-    Route::post('/user/profile/store', [UserController::class, 'userProfileStore'])->name('user.profile.store');
-    Route::get('/user/logout', [UserController::class, 'userLogout'])->name('user.logout');
-    Route::get('/user/change/password', [UserController::class, 'userChangePassword'])->name('user.change.password');
-    Route::post('/user/password/update', [UserController::class, 'userPasswordUpdate'])->name('user.password.update');
-});
-
 
 // Admin Areas //
 Route::middleware(['auth', 'role:admin'])->group(function () {
-    Route::get('/admin/dashboard', [AdminController::class, 'AdminDashboard'])->name('admin.dashboard');
+    Route::get('/admin/dashboard', [AdminController::class, 'adminDashboard'])->name('admin.dashboard');
     Route::get('/admin/logout', [AdminController::class, 'adminLogout'])->name('admin.logout');
     Route::get('admin/profile', [AdminController::class, 'adminProfile'])->name('admin.profile');
     Route::post('admin/profile/store', [AdminController::class, 'adminProfileStore'])->name('admin.profile.store');
@@ -159,7 +161,7 @@ Route::middleware(['auth', 'role:agent'])->group(function () {
         Route::get('/buy/business/plan', 'buyBusinessPlan')->name('buy.business.plan');
         Route::post('/store/business/plan', 'storeBusinessPlan')->name('store.business.plan');
 
-        Route::get('/buy/professional/plan', 'buyProfessionalPlan')->name('buy.profesional.plan');
+        Route::get('/buy/professional/plan', 'buyProfessionalPlan')->name('buy.professional.plan');
         Route::post('/store/professional/plan', 'storeProfessionalPlan')->name('store.professional.plan');
 
         Route::get('/package/history', 'packageHistory')->name('package.history');
@@ -171,10 +173,29 @@ Route::middleware(['auth', 'role:agent'])->group(function () {
         // Messaging Section
         Route::get('/agent/property/message/', 'agentPropertyMessage')->name('agent.property.message');
         Route::get('/agent/message/details/{id}', 'agentMessageDetails')->name('agent.message.details');
+
+        //agent details page in frontend
+        Route::get('/agent/details/{id}', [IndexController::class, 'agentDetails'])->name('agent.details');
+
+        // Send Message from agent details Page
+        Route::post('/agent/details/message', [IndexController::class, 'agentDetailsMessage'])->name('agent.details.message');
+
+        // Get All Rent Property
+        Route::get('/rent/property', [IndexController::class, 'rentProperty'])->name('rent.property');
+
+        // Get All Buy Property
+        Route::get('/buy/property', [IndexController::class, 'buyProperty'])->name('buy.property');
+
+        // Get All Property Type Data
+        Route::get('/property/type/{id}', [IndexController::class, 'propertyType'])->name('property.type');
+
+        // Get State Details Data
+        Route::get('/state/details/{id}', [IndexController::class, 'stateDetails'])->name('state.details');
     });
 });
 
 
+// Agent Routes For Authentication
 Route::controller(AgentController::class)->group(function () {
     Route::get('/agent/login', 'agentLogin')->middleware(RedirectIfAuthenticated::class)->name('agent.login');
     Route::post('agent/register', 'agentRegister')->name('agent.register');
@@ -183,5 +204,15 @@ Route::controller(AgentController::class)->group(function () {
     Route::get('/agent/logout', 'agentLogout')->name('agent.logout');
 });
 
+
+// All State Routes
+Route::controller(StateController::class)->group(function () {
+    Route::get('/all/state', 'allState')->name('all.state');
+    Route::get('/add/state', 'addState')->name('add.state');
+    Route::post('/store/state', 'storeState')->name('store.state');
+    Route::get('/edit/state/{id}', 'editState')->name('edit.state');
+    Route::post('/update/state', 'updateState')->name('update.state');
+    Route::get('/delete/sate/{id}', 'deleteState')->name('delete.state');
+});
 
 require __DIR__.'/auth.php';

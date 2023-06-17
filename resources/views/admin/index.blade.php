@@ -2,8 +2,8 @@
 @section('admin')
     @php
         $id = Auth::user()->id;
-        $agentId = App\Models\User::find($id);
-        $status = $agentId->status;
+        $admin = App\Models\User::find($id);
+        $status = $admin->status;
     @endphp
 
     <div class="page-content">

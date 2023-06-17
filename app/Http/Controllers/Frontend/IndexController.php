@@ -7,9 +7,13 @@ use App\Models\Facility;
 use App\Models\MultiImage;
 use App\Models\Property;
 use App\Models\PropertyMessage;
+use App\Models\PropertyType;
+use App\Models\State;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Psy\CodeCleaner\FunctionReturnInWriteContextPass;
 
 class IndexController extends Controller
 {
@@ -60,5 +64,76 @@ class IndexController extends Controller
 
             return redirect()->back()->with($notification);
         }
+    }
+
+    public function agentDetails($id)
+    {
+        $agent = User::findOrFail($id);
+        $property = Property::where('agent_id', $id)->get();
+        $featured = Property::where('featured', '1')->limit(3)->get();
+
+        $rentproperty = Property::where('proptery_status', 'rent')->get();
+        $buyproperty = Property::where('property_status', 'buy')->get();
+
+        return view('frontend.agent.agent_details', compact('agent', 'property', 'featured', 'rentproperty', 'buyproperty'));
+    }
+
+    public function agentDetailsMessage(Request $request)
+    {
+        $aid = $request->agent_id;
+
+        if(Auth::check()) {
+            PropertyMessage::insert([
+               'user_id' => Auth::user()->id,
+               'agent_id' => $aid,
+               'msg_name' => $request->msg_name,
+               'msg_email' => $request->email,
+               'msg_phone' => $request->phone,
+               'message' => $request->message,
+               'created_at' => Carbon::now(),
+            ]);
+
+            $notification = array(
+               'message' => 'Send Message Successfully.',
+               'alert-type' => 'success',
+            );
+
+            return redirect()->back()->with($notification);
+        } else {
+            $notification = array(
+               'message' => 'Please Login Your Account First.',
+               'alert-type' => 'error',
+            );
+
+            return redirect()->back()->with($notification);
+        }
+    }
+
+
+    public function rentProperty()
+    {
+        $property = Property::where('status', '1')->where('proptery_status', 'rent')->paginate(3);
+        return view('frontend.property.rent_property', compact('property'));
+    }
+
+    public function buyProperty()
+    {
+        $property = Property::where('status', '1')->where('property_status', 'buy')->get();
+        return view('frontend.property.buy_property', compact('property'));
+    }
+
+    public function propertyType($id)
+    {
+        $property = Property::where('status', '1')->where('ptype_id', $id)->get();
+        $pbread = PropertyType::where('id', $id)->first();
+        return view('frontend.property.property_type', compact('property', 'pbread'));
+    }
+
+    public function stateDetails($id)
+    {
+        $property = Property::where('status', '1')->where('state', $id)->get();
+
+        $bstate = State::where('id', $id)->first();
+        return view('frontend.property.state_property', compact('property', 'bstate'));
     }
 }
