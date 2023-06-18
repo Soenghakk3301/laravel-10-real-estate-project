@@ -198,4 +198,10 @@ class AdminController extends Controller
         return response()->json(['success' => 'Status Change Successfully']);
 
     }
+
+    public function allAdmin()
+    {
+        $alladmin = User::where('role', 'admin')->get();
+        return view('backend.pages.admin.all_admin', compact('alladmin'));
+    }
 }
