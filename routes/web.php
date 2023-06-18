@@ -16,9 +16,7 @@ use App\Http\Controllers\Frontend\IndexController;
 use App\Http\Controllers\Frontend\WishlistController;
 use App\Http\Controllers\UserController;
 use App\Http\Middleware\RedirectIfAuthenticated;
-use FontLib\Table\Type\name;
 use Illuminate\Support\Facades\Route;
-use PHPUnit\TextUI\Configuration\IncludePathNotConfiguredException;
 
 /*
 |--------------------------------------------------------------------------
