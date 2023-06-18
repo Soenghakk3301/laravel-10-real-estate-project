@@ -4,6 +4,7 @@
 @section('title')
     {{ $property->property_name }} | Easy RealEstate
 @endsection
+
 <!--Page Title-->
 <section class="page-title-two bg-color-1 centred">
     <div class="pattern-layer">
@@ -261,7 +262,19 @@
                                         <li><i class="fas fa-phone"></i><a
                                                 href="tel:03030571965">{{ $property->user->phone }}</a></li>
                                     </ul>
-                                    <div class="btn-box"><a href="agents-details.html">View Listing</a></div>
+
+                                    @auth
+                                        <div id="app">
+
+                                            <send-message :recevierid="{{ $property->agent_id }}"
+                                                receivername="{{ $property->user->name }}">
+                                            </send-message>
+
+                                        </div>
+                                    @else
+                                        <span class="text-danger">For Chat Login First </span>
+                                    @endauth
+
                                 </div>
                             @endif
 
@@ -476,4 +489,5 @@
     </div>
 </section>
 <!-- subscribe-section end -->
+
 @endsection

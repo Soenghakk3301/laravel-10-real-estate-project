@@ -10,6 +10,7 @@ use App\Http\Controllers\Backend\RoleController;
 use App\Http\Controllers\Backend\SettingController;
 use App\Http\Controllers\Backend\StateController;
 use App\Http\Controllers\Backend\TestimonialController;
+use App\Http\Controllers\ChatController;
 use App\Http\Controllers\Frontend\CompareController;
 use App\Http\Controllers\Frontend\IndexController;
 use App\Http\Controllers\Frontend\WishlistController;
@@ -38,6 +39,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/user/change/password', [UserController::class, 'userChangePassword'])->name('user.change.password');
     Route::post('/user/password/update', [UserController::class, 'userPasswordUpdate'])->name('user.password.update');
     Route::get('/user/schedule/request', [UserController::class, 'userScheduleRequest'])->name('user.schedule.request');
+
+    Route::get('/live/chat', [UserController::class, 'liveChat'])->name('live.chat');
 });
 
 // Frontend Areas
@@ -78,6 +81,13 @@ Route::post('/reply/message', [BlogController::class, 'replyMessage'])->name('re
 
 // Schedule Message Request Route
 Route::post('/store/schedule', [IndexController::class, 'storeSchedule'])->name('store.schedule');
+
+
+// Chat Post Request Route
+Route::post('/send-message', [ChatController::class, 'sendMsg'])->name('send.msg');
+Route::get('/user-all', [ChatController::class, 'getAllUsers']);
+Route::get('/user-message/{id}', [ChatController::class, 'userMsgById']);
+Route::get('/agent/live/chat', [ChatController::class, 'agentLiveChat'])->name('agent.live.chat');
 
 
 // Wishlist Add Route
