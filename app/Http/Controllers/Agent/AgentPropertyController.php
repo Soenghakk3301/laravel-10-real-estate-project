@@ -3,12 +3,14 @@
 namespace App\Http\Controllers\Agent;
 
 use App\Http\Controllers\Controller;
+use App\Mail\ScheduleMail;
 use App\Models\Amentities;
 use App\Models\Facility;
 use App\Models\MultiImage;
 use App\Models\PackagePlan;
 use App\Models\Property;
 use App\Models\PropertyType;
+use App\Models\Schedule;
 use App\Models\State;
 use App\Models\User;
 use Carbon\Carbon;
@@ -18,6 +20,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Intervention\Image\Facades\Image;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Mail;
 
 class AgentPropertyController extends Controller
 {
@@ -475,5 +478,45 @@ class AgentPropertyController extends Controller
        ]);
 
        return $pdf->download('invoice.pdf');
+   }
+
+   public function agentScheduleRequest()
+   {
+       $id = Auth::user()->id;
+       $usermsg = Schedule::where('agent_id', $id)->get();
+       return view('agent.schedule.schedule_request', compact('usermsg'));
+   }
+
+   public function agentDetailsSchedule($id)
+   {
+       $schedule = Schedule::findOrFail($id);
+       return view('agent.schedule.schedule_details', compact('schedule'));
+   }
+
+   public function agentUpdateSchedule(Request $request)
+   {
+       $sid = $request->id;
+
+       Schedule::findOrFail($sid)->update([
+             'status' => '1',
+       ]);
+
+
+       ///// starting send mail
+       $sendmail = Schedule::findOrFail($sid);
+
+       $data = [
+            'tour_date' => $sendmail->tour_date,
+            'tour_time' => $sendmail->tour_time,
+       ];
+
+       Mail::to($request->email)->send(new ScheduleMail($data));
+
+       $notification = array(
+         'message' => 'You have Confirm Schedule Successfully',
+         'alert-type' => 'success'
+       );
+
+       return redirect()->route('agent.schedule.request')->with($notification);
    }
 }

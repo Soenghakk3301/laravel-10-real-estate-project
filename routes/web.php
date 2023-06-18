@@ -3,14 +3,18 @@
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\Agent\AgentPropertyController;
 use App\Http\Controllers\AgentController;
+use App\Http\Controllers\Backend\BlogController;
 use App\Http\Controllers\Backend\PropertyController;
 use App\Http\Controllers\Backend\PropertyTypeController;
+use App\Http\Controllers\Backend\SettingController;
 use App\Http\Controllers\Backend\StateController;
+use App\Http\Controllers\Backend\TestimonialController;
 use App\Http\Controllers\Frontend\CompareController;
 use App\Http\Controllers\Frontend\IndexController;
 use App\Http\Controllers\Frontend\WishlistController;
 use App\Http\Controllers\UserController;
 use App\Http\Middleware\RedirectIfAuthenticated;
+use FontLib\Table\Type\name;
 use Illuminate\Support\Facades\Route;
 use PHPUnit\TextUI\Configuration\IncludePathNotConfiguredException;
 
@@ -32,11 +36,48 @@ Route::middleware('auth')->group(function () {
     Route::get('/user/logout', [UserController::class, 'userLogout'])->name('user.logout');
     Route::get('/user/change/password', [UserController::class, 'userChangePassword'])->name('user.change.password');
     Route::post('/user/password/update', [UserController::class, 'userPasswordUpdate'])->name('user.password.update');
+    Route::get('/user/schedule/request', [UserController::class, 'userScheduleRequest'])->name('user.schedule.request');
 });
 
 // Frontend Areas
 Route::get('/', [UserController::class, 'index']);
 Route::get('/property/details/{id}/{slug}', [IndexController::class, 'propertyDetails']);
+
+// Get All Rent Property
+Route::get('/rent/property', [IndexController::class, 'rentProperty'])->name('rent.property');
+
+// Get All Buy Property
+Route::get('/buy/property', [IndexController::class, 'buyProperty'])->name('buy.property');
+
+// Get All Property Type Data
+Route::get('/property/type/{id}', [IndexController::class, 'propertyType'])->name('property.type');
+
+// Get State Details Data
+Route::get('/state/details/{id}', [IndexController::class, 'stateDetails'])->name('state.details');
+
+// Search Buy Property
+Route::post('/buy/property/search', [IndexController::class, 'buyPropertySearch'])->name('buy.property.search');
+
+// Search Rent Property
+Route::post('/rent/property/search', [IndexController::class, 'RentPropertySeach'])->name('rent.property.search');
+
+// All Property Search Option
+Route::post('/all/property/search', [IndexController::class, 'allPropertySearch'])->name('all.property.search');
+
+// Blog Details Route
+Route::get('/blog/details/{slug}', [BlogController::class, 'blogDetails']);
+Route::get('/blog/cat/list/{id}', [BlogController::class, 'blogCatList']);
+Route::get('/blog', [BlogController::class, 'blogList'])->name('blog.list');
+Route::post('/store/comment', [BlogController::class, 'storeComment'])->name('store.comment');
+Route::get('/admin/blog/comment', [BlogController::class, 'adminBlogComment'])->name('admin.blog.comment');
+Route::get('/admin/comment/reply/{id}', [BlogController::class, 'adminCommentReply'])->name('admin.comment.reply');
+Route::post('/reply/message', [BlogController::class, 'replyMessage'])->name('reply.message');
+
+
+
+// Schedule Message Request Route
+Route::post('/store/schedule', [IndexController::class, 'storeSchedule'])->name('store.schedule');
+
 
 // Wishlist Add Route
 Route::post('/add-to-wishlist/{property_id}', [WishlistController::class, 'addToWishList']);
@@ -180,17 +221,11 @@ Route::middleware(['auth', 'role:agent'])->group(function () {
         // Send Message from agent details Page
         Route::post('/agent/details/message', [IndexController::class, 'agentDetailsMessage'])->name('agent.details.message');
 
-        // Get All Rent Property
-        Route::get('/rent/property', [IndexController::class, 'rentProperty'])->name('rent.property');
 
-        // Get All Buy Property
-        Route::get('/buy/property', [IndexController::class, 'buyProperty'])->name('buy.property');
-
-        // Get All Property Type Data
-        Route::get('/property/type/{id}', [IndexController::class, 'propertyType'])->name('property.type');
-
-        // Get State Details Data
-        Route::get('/state/details/{id}', [IndexController::class, 'stateDetails'])->name('state.details');
+        // Schedule Request Route
+        Route::get('/agent/schedule/request/', 'agentScheduleRequest')->name('agent.schedule.request');
+        Route::get('/agent/details/schedule/{id}', 'agentDetailsSchedule')->name('agent.details.schedule');
+        Route::post('/agent/update/schedule', 'agentUpdateSchedule')->name('agent.update.schedule');
     });
 });
 
@@ -214,5 +249,51 @@ Route::controller(StateController::class)->group(function () {
     Route::post('/update/state', 'updateState')->name('update.state');
     Route::get('/delete/sate/{id}', 'deleteState')->name('delete.state');
 });
+
+
+// All Testimonials Routes
+Route::controller(TestimonialController::class)->group(function () {
+    Route::get('/all/testimonials', 'allTestimonials')->name('all.testimonials');
+    Route::get('/add/testimonials', 'addTestimonials')->name('add.testimonials');
+    Route::post('/store/testimonials', 'storeTestimonials')->name('store.testimonials');
+    Route::get('/edit/testimonials/{id}', 'editTestimonials')->name('edit.testimonials');
+    Route::post('/update/testimonials', 'updateTestimonials')->name('update.testimonials');
+    Route::get('/delete/testimonials', 'deleteTestimonials')->name('delete.testimonials');
+});
+
+// Blog Category All Route
+Route::controller(BlogController::class)->group(function () {
+    Route::get('/all/blog/category', 'allBlogCategory')->name('all.blog.category');
+    Route::get('/add/blog/category', 'addBlogCategory')->name('add.blog.category');
+    Route::post('/store/blog/category', 'storeBlogCategory')->name('store.blog.category');
+    Route::get('/edit/blog/category/{id}', 'editBlogCategory')->name('edit.blog.category');
+    Route::post('/update/blog/category', 'upudateBlogCategory')->name('update.blog.category');
+    Route::get('/delete/blog/category/{id}', 'deleteBlogCategory')->name('delete.blog.category');
+});
+
+// Blog Post All Routes
+Route::controller(BlogController::class)->group(function () {
+    Route::get('/all/post', 'allPost')->name('all.post');
+    Route::get('/add/post', 'addPost')->name('add.post');
+    Route::post('/store/post', 'storePost')->name('store.post');
+    Route::get('/edit/post/{id}', 'editPost')->name('edit.post');
+    Route::post('/update/post', 'updatePost')->name('update.post');
+    Route::get('/delete/post/{id}', 'deletePost')->name('delete.post');
+});
+
+
+
+Route::controller(SettingController::class)->group(function () {
+    Route::get('/smtp/setting', 'SmtpSetting')->name('smtp.setting');
+    Route::post('/update/smpt/setting', 'updateSmtpSetting')->name('update.smpt.setting');
+
+
+
+    // Site Setting All Route
+    Route::get('/site/setting', 'siteSetting')->name('site.setting');
+    Route::post('/update/site/setting', 'updateSiteSetting')->name('update.site.setting');
+});
+
+
 
 require __DIR__.'/auth.php';
